@@ -2,3 +2,4 @@ media/
 .vscode/
 *.pyc
 assets/
+.DS_Store
