@@ -1,0 +1,28 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  entrypoint: main.py
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.SCENES}}"
+    silent: true
+    vars:
+      SCENES:
+        sh: cat {{.entrypoint}} | sed -nE 's/class (\w+)\((mm.)?Scene\):/\1/pi' | tr '\n' ' '
+
+  build:
+    cmds:
+      - |
+        for scene in {{.SCENES}}; do
+          manim -qk {{.entrypoint}} $scene
+        done
+    silent: true
+    vars:
+      SCENES:
+        sh: cat {{.entrypoint}} | sed -nE 's/class (\w+)\((mm.)?Scene\):/\1/pi' | tr '\n' ' '
+
+  clear-cache: rm -rf ./media/videos/*/*/partial_movie_files/*
